@@ -1,0 +1,55 @@
+# for some reasons udev is realy picky with the order of the rules
+
+#SYSTEM SETUP:
+#
+# There are two "USB to 8 serial ports" converters (one pysical hardware device)
+#	each consists of a usb hub and two "usb to 4 serial port" converter ICs
+#
+# The two 8xdevices are also on a usb hub. 
+#
+# The 8xdevice on the 3th port of this hub is enummerated as ttyUB* where * is 
+#	a number (1-8) and equals the portnumber printet on the device
+#
+# The 8xdevice on the 4th port of the hub is enummerated as ttyUA* 
+#
+
+SUBSYSTEM!="tty", GOTO="8xSerial_rules_end"
+ACTION!="add", GOTO="8xSerial_rules_end"
+
+#the port is the port on the serial converter ic 
+ATTRS{port_number}!="0", GOTO="8xSerial_rules_port1"
+
+ ATTRS{devpath}=="*.4.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA1"
+ ATTRS{devpath}=="*.4.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA5"
+ ATTRS{devpath}=="*.3.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB1"
+ ATTRS{devpath}=="*.3.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB5"
+ GOTO="8xSerial_rules_end"
+
+LABEL="8xSerial_rules_port1"
+ATTRS{port_number}!="1", GOTO="8xSerial_rules_port2"
+
+ ATTRS{devpath}=="*.4.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA2"
+ ATTRS{devpath}=="*.4.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA6"
+ ATTRS{devpath}=="*.3.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB2"
+ ATTRS{devpath}=="*.3.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB6"
+ GOTO="8xSerial_rules_end"
+
+LABEL="8xSerial_rules_port2"
+ATTRS{port_number}!="2", GOTO="8xSerial_rules_port3"
+
+ ATTRS{devpath}=="*.4.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA3"
+ ATTRS{devpath}=="*.4.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA7"
+ ATTRS{devpath}=="*.3.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB3"
+ ATTRS{devpath}=="*.3.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB7"
+ GOTO="8xSerial_rules_end"
+
+LABEL="8xSerial_rules_port3"
+ATTRS{port_number}!="3", GOTO="8xSerial_rules_end"
+
+ ATTRS{devpath}=="*.4.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA4"
+ ATTRS{devpath}=="*.4.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUA8"
+ ATTRS{devpath}=="*.3.1", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB4"
+ ATTRS{devpath}=="*.3.2", ATTRS{idVendor}=="9710",  SYMLINK+="ttyUB8"
+
+
+LABEL="8xSerial_rules_end"
